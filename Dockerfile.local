@@ -18,6 +18,10 @@ RUN pnpm build:main && pnpm build:widget
 FROM golang:1.25-alpine AS backend
 WORKDIR /src
 
+# proxy.golang.org often returns 403 from some regions; allow override at build time.
+ARG GOPROXY=https://goproxy.io,https://proxy.golang.org,direct
+ENV GOPROXY=${GOPROXY}
+
 RUN apk add --no-cache git
 
 COPY go.mod go.sum ./

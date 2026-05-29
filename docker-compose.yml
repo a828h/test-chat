@@ -5,9 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile.local
       args:
-        LIBREDESK_VERSION: local
-        VITE_APP_VERSION: local
-    image: libredesk/libredesk:local
+        LIBREDESK_VERSION: ${LIBREDESK_VERSION:-local}
+        VITE_APP_VERSION: ${VITE_APP_VERSION:-local}
+        # If go mod download fails with 403, try: GOPROXY=direct docker compose build --no-cache app
+        GOPROXY: ${GOPROXY:-https://goproxy.io,https://proxy.golang.org,direct}
+    image: libredesk/libredesk:${LIBREDESK_VERSION:-local}
     container_name: libredesk_app
     restart: unless-stopped
     ports:
