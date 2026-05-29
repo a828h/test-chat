@@ -1,0 +1,95 @@
+/* Global RTL layout fixes for Tailwind physical utilities. */
+
+[dir='rtl'] {
+  /* space-x-* uses margin-left on siblings; reverse in RTL. */
+  :where([class*='space-x-']:not(.space-x-reverse)) > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  .text-left {
+    text-align: start;
+  }
+
+  .text-right {
+    text-align: end;
+  }
+
+  @media (min-width: 640px) {
+    .sm\:text-left {
+      text-align: start;
+    }
+  }
+
+  .ml-auto {
+    margin-left: 0;
+    margin-inline-start: auto;
+  }
+
+  .mr-auto {
+    margin-right: 0;
+    margin-inline-end: auto;
+  }
+
+  /* Flip physical inset utilities used in admin/widget (CopyButton, close btn, pickers). */
+  .right-0 {
+    right: auto;
+    inset-inline-end: 0;
+  }
+
+  .right-2 {
+    right: auto;
+    inset-inline-end: 0.5rem;
+  }
+
+  .right-3 {
+    right: auto;
+    inset-inline-end: 0.75rem;
+  }
+
+  .left-0 {
+    left: auto;
+    inset-inline-start: 0;
+  }
+
+  .left-2 {
+    left: auto;
+    inset-inline-start: 0.5rem;
+  }
+
+  /* Physical margins → logical (common sizes in forms/lists). */
+  .ml-1 {
+    margin-left: 0;
+    margin-inline-start: 0.25rem;
+  }
+
+  .ml-2 {
+    margin-left: 0;
+    margin-inline-start: 0.5rem;
+  }
+
+  .mr-1 {
+    margin-right: 0;
+    margin-inline-end: 0.25rem;
+  }
+
+  .mr-2 {
+    margin-right: 0;
+    margin-inline-end: 0.5rem;
+  }
+
+  /* Menu/checkbox item padding (radix dropdowns). */
+  .pl-8 {
+    padding-left: 0;
+    padding-inline-start: 2rem;
+  }
+
+  .pr-2 {
+    padding-right: 0;
+    padding-inline-end: 0.5rem;
+  }
+
+  .pr-6 {
+    padding-right: 0;
+    padding-inline-end: 1.5rem;
+  }
+}

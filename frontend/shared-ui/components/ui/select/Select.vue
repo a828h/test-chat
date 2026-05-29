@@ -1,5 +1,7 @@
 <script setup>
+import { computed } from 'vue'
 import { SelectRoot, useForwardPropsEmits } from 'radix-vue'
+import { useDocumentDirection } from '../../../composables/useDocumentDirection'
 
 const props = defineProps({
   open: { type: Boolean, required: false },
@@ -14,11 +16,13 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:modelValue', 'update:open'])
 
+const documentDirection = useDocumentDirection()
+const resolvedDir = computed(() => props.dir ?? documentDirection.value)
 const forwarded = useForwardPropsEmits(props, emits)
 </script>
 
 <template>
-  <SelectRoot v-bind="forwarded">
+  <SelectRoot v-bind="forwarded" :dir="resolvedDir">
     <slot />
   </SelectRoot>
 </template>

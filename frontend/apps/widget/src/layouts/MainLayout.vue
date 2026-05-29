@@ -1,9 +1,14 @@
 <template>
   <div class="flex flex-col h-full relative">
-    <div class="absolute top-2 right-2 z-20">
+    <div class="absolute top-2 end-2 z-20">
       <CloseWidgetButton />
     </div>
-    <Tabs :modelValue="widgetStore.currentView" @update:modelValue="handleTabChange" class="flex flex-col h-full">
+    <Tabs
+      :modelValue="widgetStore.currentView"
+      :dir="direction"
+      @update:modelValue="handleTabChange"
+      class="flex flex-col h-full"
+    >
       <div class="flex-1 min-h-0">
         <TabsContent value="home" class="h-full mt-0">
           <HomeView />
@@ -52,8 +57,10 @@ import ConversationsView from '@widget/views/ConversationsView.vue'
 import ConnectionBanner from '@widget/components/ConnectionBanner.vue'
 import CloseWidgetButton from '@widget/components/CloseWidgetButton.vue'
 import { useWidgetStore } from '@widget/store/widget.js'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
 
 const widgetStore = useWidgetStore()
+const { direction } = useLocaleDirection()
 
 const handleTabChange = (value) => {
   if (value === 'home') {

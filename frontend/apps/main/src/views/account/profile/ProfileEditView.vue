@@ -5,13 +5,13 @@
         <span class="sub-title">{{ $t('account.publicAvatar') }}</span>
         <p class="text-muted-foreground text-xs">{{ $t('account.changeAvatar') }}</p>
       </div>
-      <div class="flex space-x-5">
-        <Avatar class="size-28">
+      <div class="flex flex-wrap items-start gap-5">
+        <Avatar class="size-28 shrink-0">
           <AvatarImage :src="userStore.avatar" alt="Cropped Image" />
           <AvatarFallback>{{ userStore.getInitials }}</AvatarFallback>
         </Avatar>
 
-        <div class="flex flex-col space-y-5 justify-center">
+        <div class="flex flex-col gap-5 justify-center">
           <input
             ref="uploadInput"
             type="file"
@@ -48,7 +48,7 @@
             :img="newUserAvatar"
             :options="{ viewMode: 1, dragMode: 'crop', aspectRatio: 1 }"
           />
-          <DialogFooter class="sm:justify-end">
+          <DialogFooter class="sm:justify-start">
             <Button variant="secondary" @click="closeDialog">
               {{ $t('globals.messages.close') }}
             </Button>

@@ -15,26 +15,26 @@
           <StatusDot
             :status="userStore.user.availability_status"
             size="md"
-            class="absolute bottom-0 right-0 border border-background"
+            class="absolute bottom-0 end-0 border border-background"
           />
         </div>
-        <div class="grid flex-1 text-left text-sm leading-tight">
+        <div class="grid flex-1 text-start text-sm leading-tight">
           <span class="truncate font-semibold">{{ userStore.getFullName }}</span>
           <span class="truncate text-xs">{{ userStore.email }}</span>
         </div>
-        <ChevronsUpDown class="ml-auto size-4" />
+        <ChevronsUpDown class="ms-auto size-4" />
       </SidebarMenuButton>
     </DropdownMenuTrigger>
     <DropdownMenuContent
       class="min-w-56"
-      side="right"
+      :side="inlineStartSide"
       align="end"
       :side-offset="8"
       :align-offset="40"
     >
       <DropdownMenuLabel class="font-normal space-y-2 px-2">
         <!-- User header -->
-        <div class="flex items-center gap-2 py-1.5 text-left text-sm">
+        <div class="flex items-center gap-2 py-1.5 text-start text-sm">
           <Avatar class="h-8 w-8 rounded">
             <AvatarImage :src="userStore.avatar" alt="U" />
             <AvatarFallback class="rounded">
@@ -89,13 +89,13 @@
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem @click.prevent="router.push({ name: 'account' })">
-          <CircleUserRound size="18" class="mr-2" />
+          <CircleUserRound size="18" class="me-2" />
           {{ t('globals.terms.account') }}
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="logout">
-        <LogOut size="18" class="mr-2" />
+        <LogOut size="18" class="me-2" />
         {{ t('navigation.logout') }}
       </DropdownMenuItem>
     </DropdownMenuContent>
@@ -122,8 +122,10 @@ import { useUserStore } from '../../stores/user'
 import { useRouter } from 'vue-router'
 
 import { useColorMode } from '@vueuse/core'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
 
 const mode = useColorMode()
+const { inlineStartSide } = useLocaleDirection()
 const userStore = useUserStore()
 const router = useRouter()
 const { t } = useI18n()

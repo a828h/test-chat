@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { ComboboxRoot, useForwardPropsEmits } from 'radix-vue'
 import { cn } from '../../../lib/utils'
+import { useDocumentDirection } from '../../../composables/useDocumentDirection'
 
 const props = defineProps({
   modelValue: { type: null, required: false, default: '' },
@@ -29,12 +30,15 @@ const delegatedProps = computed(() => {
   return delegated
 })
 
+const documentDirection = useDocumentDirection()
+const resolvedDir = computed(() => props.dir ?? documentDirection.value)
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
   <ComboboxRoot
     v-bind="forwarded"
+    :dir="resolvedDir"
     :class="
       cn(
         'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',

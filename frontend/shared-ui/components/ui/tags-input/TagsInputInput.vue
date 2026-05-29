@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { TagsInputInput, useForwardProps } from 'radix-vue'
 import { cn } from '../../../lib/utils'
+import { useDocumentDirection } from '../../../composables/useDocumentDirection'
 
 const props = defineProps({
   placeholder: { type: String, required: false },
@@ -19,11 +20,13 @@ const delegatedProps = computed(() => {
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
+const direction = useDocumentDirection()
 </script>
 
 <template>
   <TagsInputInput
     v-bind="forwardedProps"
+    :dir="direction"
     :class="cn('text-sm min-h-5 focus:outline-none flex-1 bg-transparent px-1', props.class)"
   />
 </template>

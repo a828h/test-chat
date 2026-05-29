@@ -1,5 +1,7 @@
 <script setup>
+import { computed } from 'vue'
 import { DropdownMenuRoot, useForwardPropsEmits } from 'radix-vue'
+import { useDocumentDirection } from '../../../composables/useDocumentDirection'
 
 const props = defineProps({
   defaultOpen: { type: Boolean, required: false },
@@ -9,11 +11,13 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:open'])
 
+const documentDirection = useDocumentDirection()
+const resolvedDir = computed(() => props.dir ?? documentDirection.value)
 const forwarded = useForwardPropsEmits(props, emits)
 </script>
 
 <template>
-  <DropdownMenuRoot v-bind="forwarded">
+  <DropdownMenuRoot v-bind="forwarded" :dir="resolvedDir">
     <slot />
   </DropdownMenuRoot>
 </template>

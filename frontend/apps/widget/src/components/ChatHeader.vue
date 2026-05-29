@@ -2,11 +2,11 @@
   <div class="flex items-center p-2 border-b border-border bg-background gap-3 relative">
     <div class="flex items-center gap-2 justify-start">
       <Button @click="$emit('goBack')" variant="ghost" size="sm" :aria-label="$t('globals.messages.goBack')">
-        <ArrowLeft />
+        <ArrowLeft class="rtl:rotate-180" />
       </Button>
       <ChatTitle />
     </div>
-    <div class="flex items-center gap-2 ml-auto">
+    <div class="flex items-center gap-2 ms-auto">
       <!-- Expand/Collapse Button - only visible on desktop -->
       <Button 
         v-if="!widgetStore.isMobileFullScreen" 

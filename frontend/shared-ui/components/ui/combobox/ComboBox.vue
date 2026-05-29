@@ -8,7 +8,7 @@
           :aria-expanded="open"
           :class="['w-full justify-between', buttonClass]"
         >
-          <span class="min-w-0 flex-1 truncate text-left">
+          <span class="min-w-0 flex-1 truncate text-start">
             <slot name="selected" :selected="selectedItem">{{ selectedLabel }}</slot>
           </span>
           <CaretSortIcon class="h-4 w-4 shrink-0 opacity-50" />
@@ -30,7 +30,7 @@
               <slot name="item" :item="item">{{ item.label }}</slot>
               <CheckIcon
                 :class="
-                  cn('ml-auto h-4 w-4', String(value) === item.value ? 'opacity-100' : 'opacity-0')
+                  cn('ms-auto h-4 w-4', String(value) === item.value ? 'opacity-100' : 'opacity-0')
                 "
               />
             </CommandItem>

@@ -427,11 +427,12 @@ defineExpose({ focus, extractMentions })
 // Moving placeholder to the top.
 .tiptap p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  float: left;
+  float: inline-start;
   color: #adb5bd;
   pointer-events: none;
   height: 0;
   font-size: 0.875rem;
+  text-align: start;
 }
 
 // Ensure the parent div has a proper height

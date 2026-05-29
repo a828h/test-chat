@@ -18,7 +18,7 @@
                         </router-link>
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    <TooltipContent side="right">
+                    <TooltipContent :side="inlineStartSide">
                       <p>{{ t('globals.terms.inbox', 2) }}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -32,7 +32,7 @@
                         </router-link>
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    <TooltipContent side="right">
+                    <TooltipContent :side="inlineStartSide">
                       <p>{{ t('globals.terms.contact', 2) }}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -46,7 +46,7 @@
                         </router-link>
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    <TooltipContent side="right">
+                    <TooltipContent :side="inlineStartSide">
                       <p>{{ t('globals.terms.report', 2) }}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -64,7 +64,7 @@
                         </router-link>
                       </SidebarMenuButton>
                     </TooltipTrigger>
-                    <TooltipContent side="right">
+                    <TooltipContent :side="inlineStartSide">
                       <p>{{ t('globals.terms.admin') }}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -80,7 +80,7 @@
                 <TooltipTrigger as-child>
                   <NotificationBell />
                 </TooltipTrigger>
-                <TooltipContent side="right">
+                <TooltipContent :side="inlineStartSide">
                   <p>{{ t('globals.terms.notification', 2) }}</p>
                 </TooltipContent>
               </Tooltip>
@@ -159,6 +159,7 @@ import { Inbox, Shield, FileLineChart, BookUser } from 'lucide-vue-next'
 import SmallScreenOverlay from '@/components/SmallScreenOverlay.vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -210,6 +211,7 @@ const view = ref({})
 const openCreateViewForm = ref(false)
 const openCreateConversationDialog = ref(false)
 const { t } = useI18n()
+const { inlineStartSide } = useLocaleDirection()
 const notificationStore = useNotificationStore()
 
 // Update browser tab title with unread notification count.

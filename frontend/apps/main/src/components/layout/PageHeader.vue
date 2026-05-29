@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isHidden">
-    <div class="flex items-center space-x-4 h-12 px-2">
+    <div class="flex items-center gap-4 h-12 px-2">
       <SidebarTrigger class="cursor-pointer" />
       <span class="text-xl font-semibold">
         {{ title }}

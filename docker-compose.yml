@@ -1,7 +1,13 @@
 services:
-  # Libredesk app
+  # Libredesk app (built from local source — includes RTL frontend changes)
   app:
-    image: libredesk/libredesk:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      args:
+        LIBREDESK_VERSION: local
+        VITE_APP_VERSION: local
+    image: libredesk/libredesk:local
     container_name: libredesk_app
     restart: unless-stopped
     ports:
@@ -48,9 +54,11 @@ services:
     image: redis:7-alpine
     container_name: libredesk_redis
     restart: unless-stopped
-    ports:
-      # Only bind on the local interface.
-      - "127.0.0.1:6379:6379"
+    # No host port mapping — app connects via Docker network (redis:6379).
+    # Port 6379 is often already in use on Windows (WSL Redis). To expose
+    # Redis on the host, uncomment and pick a free port, e.g. 6380:6379.
+    # ports:
+    #   - "127.0.0.1:6380:6379"
     networks:
       - libredesk
     volumes:

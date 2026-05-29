@@ -302,6 +302,10 @@ func initHandlers(g *fastglue.Fastglue, hub *ws.Hub) {
 	g.GET("/assets/{all:*}", serveFrontendStaticFiles)
 	g.GET("/widget/assets/{all:*}", serveWidgetStaticFiles)
 	g.GET("/images/{all:*}", serveFrontendStaticFiles)
+	// Vite public/ files are copied to the frontend dist root (logo.png, favicon/, etc.).
+	g.GET("/logo.png", serveFrontendStaticFiles)
+	g.GET("/favicon.ico", serveFaviconICO)
+	g.GET("/favicon/{all:*}", serveFrontendStaticFiles)
 	g.GET("/static/public/{all:*}", serveStaticFiles)
 
 	// Public pages.
@@ -381,6 +385,19 @@ func serveStaticFiles(r *fastglue.Request) error {
 		contentType = http.DetectContentType(file.ReadBytes())
 	}
 	r.RequestCtx.Response.Header.Set("Content-Type", contentType)
+	r.RequestCtx.SetBody(file.ReadBytes())
+	return nil
+}
+
+// serveFaviconICO serves /favicon.ico from frontend/public/favicon/favicon.ico.
+func serveFaviconICO(r *fastglue.Request) error {
+	app := r.Context.(*App)
+	finalPath := filepath.Join(frontendDir, "/favicon/favicon.ico")
+	file, err := app.fs.Get(finalPath)
+	if err != nil {
+		return r.SendErrorEnvelope(http.StatusNotFound, app.i18n.T("validation.notFoundFile"), nil, envelope.NotFoundError)
+	}
+	r.RequestCtx.Response.Header.Set("Content-Type", "image/x-icon")
 	r.RequestCtx.SetBody(file.ReadBytes())
 	return nil
 }

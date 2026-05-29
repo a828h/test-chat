@@ -1,6 +1,7 @@
 <template>
   <div
     class="libredesk-widget-app text-foreground bg-background"
+    :dir="direction"
     :class="{ dark: widgetStore.config.dark_mode, mobile: widgetStore.isMobileFullScreen }"
     :style="customColorStyle"
     @click.once="initAudioContext"
@@ -22,7 +23,10 @@ import api, { setApiSessionToken, initVisitorToken, saveSession, registerStores 
 import { useUnreadCount } from './composables/useUnreadCount.js'
 import { initAudioContext } from '@shared-ui/composables/useNotificationSound.js'
 import { hexToHSL, getContrastingHSL } from '@shared-ui/utils/color.js'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
 import MainLayout from '@widget/layouts/MainLayout.vue'
+
+const { direction } = useLocaleDirection()
 
 const widgetStore = useWidgetStore()
 const chatStore = useChatStore()

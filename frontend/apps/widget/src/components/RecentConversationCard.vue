@@ -22,7 +22,7 @@
               <span>{{ getRelativeTime(new Date(conversation.last_message.created_at)) }}</span>
             </div>
           </div>
-          <ArrowRight class="w-4 h-4 text-muted-foreground ml-2 flex-shrink-0 self-center" />
+          <ArrowRight class="w-4 h-4 text-muted-foreground ms-2 flex-shrink-0 self-center rtl:rotate-180" />
         </div>
       </CardContent>
     </Card>

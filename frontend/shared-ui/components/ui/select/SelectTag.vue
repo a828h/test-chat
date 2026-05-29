@@ -15,6 +15,7 @@
       v-model:open="open"
       v-model:search-term="searchTerm"
       :filterFunction="filterFunc"
+      :dir="direction"
       class="w-full"
     >
       <ComboboxAnchor as-child>
@@ -71,6 +72,7 @@ import {
 } from 'radix-vue'
 import { computed, ref } from 'vue'
 import { useField } from 'vee-validate'
+import { useDocumentDirection } from '../../../composables/useDocumentDirection'
 
 const RENDER_CAP = 200
 
@@ -100,6 +102,7 @@ const { handleBlur } = useField(() => props.name, undefined, {
   initialValue: tags.value
 })
 
+const direction = useDocumentDirection()
 const open = ref(false)
 const searchTerm = ref('')
 

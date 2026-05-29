@@ -1,7 +1,7 @@
 <template>
   <form @submit="onSubmit" class="space-y-6 w-full">
     <!-- Main Tabs -->
-    <Tabs v-model="activeTab" class="w-full">
+    <Tabs v-model="activeTab" :dir="direction" class="w-full">
       <TabsList class="flex flex-wrap gap-1 h-auto p-1 w-fit">
         <TabsTrigger value="general">{{ $t('globals.terms.general') }}</TabsTrigger>
         <TabsTrigger value="appearance">{{
@@ -258,11 +258,11 @@
                 <FormLabel>{{ $t('globals.messages.headerTextColor') }}</FormLabel>
                 <FormControl>
                   <RadioGroup v-bind="componentField" class="flex gap-4">
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center gap-2">
                       <RadioGroupItem id="text-black" value="black" />
                       <Label for="text-black">{{ $t('globals.terms.black') }}</Label>
                     </div>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center gap-2">
                       <RadioGroupItem id="text-white" value="white" />
                       <Label for="text-white">{{ $t('globals.terms.white') }}</Label>
                     </div>
@@ -278,15 +278,15 @@
                 <FormLabel>{{ $t('globals.terms.background') }}</FormLabel>
                 <FormControl>
                   <RadioGroup v-bind="componentField" class="flex gap-4">
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center gap-2">
                       <RadioGroupItem id="bg-solid" value="solid" />
                       <Label for="bg-solid">{{ $t('globals.terms.solid') }}</Label>
                     </div>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center gap-2">
                       <RadioGroupItem id="bg-gradient" value="gradient" />
                       <Label for="bg-gradient">{{ $t('globals.terms.gradient') }}</Label>
                     </div>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center gap-2">
                       <RadioGroupItem id="bg-image" value="image" />
                       <Label for="bg-image">{{ $t('globals.terms.image', 1) }}</Label>
                     </div>
@@ -906,7 +906,7 @@
           <!-- Basic Installation -->
           <div class="relative">
             <CodeEditor :modelValue="integrationSnippet" language="html" :readOnly="true" />
-            <CopyButton :text="integrationSnippet" class="absolute top-3 right-3" />
+            <CopyButton :text="integrationSnippet" class="absolute top-3 end-3" />
           </div>
 
           <!-- Identity Verification Section -->
@@ -926,7 +926,7 @@
 
             <div class="relative">
               <CodeEditor :modelValue="jwtPayloadExample" language="javascript" :readOnly="true" />
-              <CopyButton :text="jwtPayloadExample" class="absolute top-3 right-3" />
+              <CopyButton :text="jwtPayloadExample" class="absolute top-3 end-3" />
             </div>
 
             <p class="text-sm text-muted-foreground">
@@ -941,7 +941,7 @@
               />
               <CopyButton
                 :text="authenticatedIntegrationSnippet"
-                class="absolute top-3 right-3"
+                class="absolute top-3 end-3"
               />
             </div>
 
@@ -963,7 +963,7 @@
 
             <div class="relative">
               <CodeEditor :modelValue="jsApiSnippet" language="javascript" :readOnly="true" />
-              <CopyButton :text="jsApiSnippet" class="absolute top-3 right-3" />
+              <CopyButton :text="jsApiSnippet" class="absolute top-3 end-3" />
             </div>
           </div>
         </div>
@@ -1011,6 +1011,9 @@ import PreChatFormConfig, { getDefaultPrechatFields } from './PreChatFormConfig.
 import { useAppSettingsStore } from '@/stores/appSettings'
 import CopyButton from '@/components/button/CopyButton.vue'
 import CodeEditor from '@/components/editor/CodeEditor.vue'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
+
+const { direction } = useLocaleDirection()
 
 const props = defineProps({
   initialValues: {

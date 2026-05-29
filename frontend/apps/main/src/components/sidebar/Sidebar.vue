@@ -102,6 +102,9 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@main/stores/user'
 import { useConversationStore } from '@main/stores/conversation'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
+
+const { secondarySidebarSide } = useLocaleDirection()
 
 defineProps({
   userTeams: { type: Array, default: () => [] },
@@ -245,7 +248,7 @@ const viewToDelete = ref(null)
     <template
       v-if="route.matched.some((record) => record.name && record.name.startsWith('contact'))"
     >
-      <Sidebar collapsible="offcanvas" class="sidebar-secondary">
+      <Sidebar collapsible="offcanvas" class="sidebar-secondary" :side="secondarySidebarSide">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -281,7 +284,7 @@ const viewToDelete = ref(null)
         route.matched.some((record) => record.name && record.name.startsWith('reports'))
       "
     >
-      <Sidebar collapsible="offcanvas" class="sidebar-secondary">
+      <Sidebar collapsible="offcanvas" class="sidebar-secondary" :side="secondarySidebarSide">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -312,7 +315,7 @@ const viewToDelete = ref(null)
 
     <!-- Admin Sidebar -->
     <template v-if="route.matched.some((record) => record.name && record.name.startsWith('admin'))">
-      <Sidebar collapsible="offcanvas" class="sidebar-secondary">
+      <Sidebar collapsible="offcanvas" class="sidebar-secondary" :side="secondarySidebarSide">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -352,7 +355,7 @@ const viewToDelete = ref(null)
                     <SidebarMenuButton :isActive="isActiveParent(item.href)">
                       <span>{{ t(item.titleKey, item.isTitleKeyPlural === true ? 2 : 1) }}</span>
                       <ChevronRight
-                        class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+                        class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:-scale-x-100"
                       />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -378,7 +381,7 @@ const viewToDelete = ref(null)
 
     <!-- Account sidebar -->
     <template v-if="isActiveParent('/account')">
-      <Sidebar collapsible="offcanvas" class="sidebar-secondary">
+      <Sidebar collapsible="offcanvas" class="sidebar-secondary" :side="secondarySidebarSide">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -412,7 +415,7 @@ const viewToDelete = ref(null)
 
     <!-- Inbox sidebar -->
     <template v-if="route.path && isInboxRoute(route.path)">
-      <Sidebar collapsible="offcanvas" class="sidebar-secondary">
+      <Sidebar collapsible="offcanvas" class="sidebar-secondary" :side="secondarySidebarSide">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -420,7 +423,7 @@ const viewToDelete = ref(null)
                 <div class="font-semibold text-xl">
                   <span>{{ t('globals.terms.inbox') }}</span>
                 </div>
-                <div class="mr-1 mt-1 transition-colors">
+                <div class="me-1 mt-1 transition-colors">
                   <router-link :to="{ name: 'search' }">
                     <Search size="18" stroke-width="2.5" class="text-muted-foreground hover:text-foreground" />
                   </router-link>
@@ -487,7 +490,7 @@ const viewToDelete = ref(null)
                           {{ t('globals.terms.teamInbox', 2) }}
                         </span>
                         <ChevronRight
-                          class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+                          class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:-scale-x-100"
                         />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -523,7 +526,7 @@ const viewToDelete = ref(null)
                           />
                         </div>
                         <ChevronRight
-                          class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+                          class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:-scale-x-100"
                           v-if="userViews.length"
                         />
                     </SidebarMenuButton>
@@ -545,7 +548,7 @@ const viewToDelete = ref(null)
                         </SidebarMenuButton>
                         <SidebarMenuAction
                           :class="[
-                            'mr-3',
+                            'me-3',
                             'md:opacity-0',
                             'data-[state=open]:opacity-100',
                             { 'md:opacity-100': hoveredViewId === view.id }
@@ -585,7 +588,7 @@ const viewToDelete = ref(null)
                           {{ t('globals.terms.sharedView', 2) }}
                         </span>
                         <ChevronRight
-                          class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+                          class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:-scale-x-100"
                         />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -639,11 +642,23 @@ const viewToDelete = ref(null)
 </template>
 
 <style scoped>
+/* sidebar-secondary is on the fixed panel (see shared-ui Sidebar.vue). */
 :deep(.sidebar-secondary) {
-  @apply border ml-[3.2rem] rounded-lg overflow-hidden;
-  top: 0.40rem !important;
+  @apply border rounded-lg overflow-hidden;
+  top: 0.4rem !important;
   bottom: 0.35rem !important;
   height: auto !important;
+}
+
+/* Offset from the icon rail (3rem rail + app padding). */
+html[dir='ltr'] :deep(.sidebar-secondary) {
+  left: 3.2rem !important;
+  right: auto !important;
+}
+
+html[dir='rtl'] :deep(.sidebar-secondary) {
+  left: auto !important;
+  right: 3.2rem !important;
 }
 
 /* Override SidebarProvider height */

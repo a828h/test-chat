@@ -1,7 +1,7 @@
 <template>
   <div>
     <Dialog v-model:open="dialogOpen">
-      <DialogContent class="max-w-5xl w-full h-[90vh] flex flex-col" >
+      <DialogContent class="max-w-5xl w-full h-[90vh] flex flex-col" :dir="direction">
         <DialogHeader>
           <DialogTitle>
             {{ $t('conversation.newConversation') }}
@@ -9,7 +9,7 @@
           <DialogDescription />
         </DialogHeader>
 
-        <form @submit="createConversation" class="flex flex-col flex-1 overflow-hidden">
+        <form @submit="createConversation" class="flex flex-col flex-1 overflow-hidden text-start">
           <!-- Form Fields Section -->
           <div class="space-y-4 pb-2 flex-shrink-0">
             <div class="space-y-2">
@@ -155,6 +155,7 @@
                           ...teamStore.options
                         ]"
                         :placeholder="t('placeholders.selectTeam')"
+                        :align="popoverAlign"
                         type="team"
                       />
                     </FormControl>
@@ -177,6 +178,7 @@
                           ...uStore.options
                         ]"
                         :placeholder="t('placeholders.selectAgent')"
+                        :align="popoverAlign"
                         type="user"
                       />
                     </FormControl>
@@ -296,6 +298,7 @@ import {
   SelectValue
 } from '@shared-ui/components/ui/select'
 import { useI18n } from 'vue-i18n'
+import { useLocaleDirection } from '@shared-ui/composables/useLocaleDirection'
 import { useFileUpload } from '@/composables/useFileUpload'
 import Editor from '@/components/editor/TextEditor.vue'
 import { useMacroStore } from '@/stores/macro'
@@ -312,6 +315,8 @@ const dialogOpen = defineModel({
 
 const inboxStore = useInboxStore()
 const { t } = useI18n()
+const { direction, isRtl } = useLocaleDirection()
+const popoverAlign = computed(() => (isRtl.value ? 'end' : 'start'))
 const uStore = useUsersStore()
 const teamStore = useTeamStore()
 const emitter = useEmitter()

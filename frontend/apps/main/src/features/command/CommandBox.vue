@@ -246,6 +246,7 @@ import { Calendar } from '@shared-ui/components/ui/calendar'
 import { Input } from '@shared-ui/components/ui/input'
 import { Label } from '@shared-ui/components/ui/label'
 import { useI18n } from 'vue-i18n'
+import { formatMacroActionValues } from '@/utils/macroActionDisplay.js'
 import { Letter } from 'vue-letter'
 
 const RENDER_CAP = 200
@@ -325,7 +326,7 @@ const getActionLabel = computed(() => (action) => {
     set_tags: t('actions.setTags'),
     remove_tags: t('actions.removeTags')
   }
-  return `${prefixes[action.type]}: ${action.display_value.length > 0 ? action.display_value.join(', ') : action.value.join(', ')}`
+  return `${prefixes[action.type]}: ${formatMacroActionValues(action, t)}`
 })
 
 const replyContent = computed(() => highlightedMacro.value?.message_content || '')

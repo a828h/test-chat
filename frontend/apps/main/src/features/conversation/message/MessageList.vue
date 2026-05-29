@@ -20,41 +20,43 @@
           </Button>
         </div>
 
-        <MessagesSkeleton :count="10" v-if="conversationStore.messages.loading" />
+        <!-- LTR geometry for bubble sides; Persian/Arabic text uses dir=auto on bubbles. -->
+        <div dir="ltr" class="chat-thread flex flex-col w-full">
+          <MessagesSkeleton :count="10" v-if="conversationStore.messages.loading" />
 
-        <TransitionGroup v-else enter-active-class="animate-slide-in" tag="div">
-          <div
-            v-for="row in messageRows"
-            :key="row.message.uuid"
-            :data-message-uuid="row.message.uuid"
-            :class="[row.spacingClass, { 'my-2': row.message.type === 'activity' }]"
-          >
-            <div v-if="!row.message.private && row.message.type !== 'activity'">
-              <MessageBubble
-                :message="row.message"
-                :direction="row.message.type"
-                :group-with-prev="row.groupWithPrev"
-                :group-with-next="row.groupWithNext"
-              />
+          <TransitionGroup v-else enter-active-class="animate-slide-in" tag="div" class="flex flex-col">
+            <div
+              v-for="row in messageRows"
+              :key="row.message.uuid"
+              :data-message-uuid="row.message.uuid"
+              :class="[row.spacingClass, { 'my-2': row.message.type === 'activity' }]"
+            >
+              <div v-if="!row.message.private && row.message.type !== 'activity'">
+                <MessageBubble
+                  :message="row.message"
+                  :direction="row.message.type"
+                  :group-with-prev="row.groupWithPrev"
+                  :group-with-next="row.groupWithNext"
+                />
+              </div>
+              <div v-else-if="isPrivateNote(row.message)">
+                <MessageBubble
+                  :message="row.message"
+                  direction="outgoing"
+                  :group-with-prev="row.groupWithPrev"
+                  :group-with-next="row.groupWithNext"
+                />
+              </div>
+              <div v-else-if="row.message.type === 'activity'">
+                <ActivityMessageBubble :message="row.message" />
+              </div>
             </div>
-            <div v-else-if="isPrivateNote(row.message)">
-              <MessageBubble
-                :message="row.message"
-                direction="outgoing"
-                :group-with-prev="row.groupWithPrev"
-                :group-with-next="row.groupWithNext"
-              />
-            </div>
-            <div v-else-if="row.message.type === 'activity'">
-              <ActivityMessageBubble :message="row.message" />
-            </div>
+          </TransitionGroup>
+
+          <div v-if="conversationStore.conversation.isTyping" class="pt-4">
+            <TypingIndicator />
           </div>
-        </TransitionGroup>
-      </div>
-
-      <!-- Typing indicator -->
-      <div v-if="conversationStore.conversation.isTyping" class="px-4 pb-4">
-        <TypingIndicator />
+        </div>
       </div>
     </div>
 

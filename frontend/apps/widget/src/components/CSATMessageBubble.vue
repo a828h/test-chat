@@ -48,7 +48,7 @@
       <!-- Show submitted rating if provided -->
       <div v-if="csatMeta.submitted_rating" class="mb-2">
         <span class="text-lg">{{ getRatingEmoji(csatMeta.submitted_rating) }}</span>
-        <span class="text-xs text-muted-foreground ml-2">{{ getRatingText(csatMeta.submitted_rating) }}</span>
+        <span class="text-xs text-muted-foreground ms-2">{{ getRatingText(csatMeta.submitted_rating) }}</span>
       </div>
       
       <!-- Show submitted feedback if provided -->

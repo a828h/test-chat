@@ -10,6 +10,14 @@
     }
     window.__libredeskWidgetLoaded = true;
 
+    const RTL_LANGUAGE_PREFIXES = ['ar', 'fa', 'he', 'iw', 'ur', 'ps', 'sd', 'ug', 'yi'];
+
+    function isRtlLocale (locale) {
+        if (!locale) return false;
+        const language = String(locale).trim().toLowerCase().replace(/_/g, '-').split('-')[0];
+        return RTL_LANGUAGE_PREFIXES.includes(language);
+    }
+
     class Libredesk {
         constructor(config = {}) {
             if (!config.baseURL) {
@@ -56,6 +64,30 @@
 
         formatBadgeCount (count) {
             return count > 99 ? '99+' : count.toString();
+        }
+
+        getResolvedWidgetLanguage () {
+            const settings = this.widgetSettings;
+            if (!settings) return 'en-US';
+            if (settings.language === 'auto') {
+                return navigator.language || navigator.languages?.[0] || settings.fallback_language || 'en-US';
+            }
+            return settings.language || settings.fallback_language || 'en-US';
+        }
+
+        isWidgetRtl () {
+            return isRtlLocale(this.getResolvedWidgetLanguage());
+        }
+
+        applyUnreadBadgePosition () {
+            if (!this.unreadBadge) return;
+            if (this.isWidgetRtl()) {
+                this.unreadBadge.style.right = '';
+                this.unreadBadge.style.left = '-5px';
+            } else {
+                this.unreadBadge.style.left = '';
+                this.unreadBadge.style.right = '-5px';
+            }
         }
 
         getCookieName (type) {
@@ -265,6 +297,7 @@
             widgetButtonWrapper.appendChild(this.unreadBadge);
             this.toggleButton.style.position = 'relative';
             this.widgetButtonWrapper = widgetButtonWrapper;
+            this.applyUnreadBadgePosition();
 
             const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const iframeTransition = reducedMotion

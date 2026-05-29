@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './rtl.scss';
+
 :root {
   font-size: 16px;
 }
@@ -53,20 +55,20 @@
 
     ul {
       list-style-type: disc;
-      margin-left: 1.5rem;
+      margin-inline-start: 1.5rem;
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
     }
 
     ol {
       list-style-type: decimal;
-      margin-left: 1.5rem;
+      margin-inline-start: 1.5rem;
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
     }
 
     li {
-      padding-left: 0.25rem;
+      padding-inline-start: 0.25rem;
     }
 
     h1,
@@ -355,10 +357,76 @@
 }
 
 /* Fix collapsed sidebar visibility in padding gap.
- * The sidebar is position:fixed and slides to left:-14rem when collapsed,
- * but ml-[3.2rem] offset causes part to remain visible in the app's padding gap.
- * Push it further left to fully hide it.
+ * The sidebar is position:fixed and slides off-screen when collapsed,
+ * but ml/ms offset causes part to remain visible in the app's padding gap.
+ * Push it further away to fully hide it.
  */
-[data-state="collapsed"][data-collapsible="offcanvas"] .sidebar-secondary {
+[dir='ltr'] [data-state='collapsed'][data-collapsible='offcanvas'] .sidebar-secondary {
   left: calc((var(--sidebar-width) + 3.5rem) * -1.4) !important;
+  right: auto !important;
+}
+
+[dir='rtl'] [data-state='collapsed'][data-collapsible='offcanvas'] .sidebar-secondary {
+  left: auto !important;
+  right: calc((var(--sidebar-width) + 3.5rem) * -1.4) !important;
+}
+
+/* Secondary sidebar: class is on the fixed panel itself (overrides Tailwind right-0/left-0). */
+html[dir='ltr'] .sidebar-secondary {
+  left: 3.2rem !important;
+  right: auto !important;
+}
+
+html[dir='rtl'] .sidebar-secondary {
+  left: auto !important;
+  right: 3.2rem !important;
+}
+
+/* Message thread keeps LTR bubble layout inside RTL UI; bubble body text follows locale. */
+.chat-thread .message-bubble {
+  dir: auto;
+  unicode-bidi: plaintext;
+}
+
+[dir='rtl'] {
+  text-align: start;
+
+  /* Form controls */
+  input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']):not([type='hidden']),
+  textarea,
+  select,
+  [role='combobox'],
+  [data-radix-select-trigger] {
+    direction: rtl;
+    text-align: start;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    direction: rtl;
+    text-align: start;
+  }
+
+  [data-radix-select-content],
+  [data-radix-select-viewport],
+  [role='listbox'],
+  [role='option'],
+  [data-radix-menu-content],
+  [data-radix-dropdown-menu-content] {
+    direction: rtl;
+    text-align: start;
+  }
+
+  [data-radix-tags-input-input] {
+    direction: rtl;
+    text-align: start;
+  }
+
+  .native-html {
+    blockquote {
+      border-inline-start: 3px solid hsl(var(--border));
+      padding-inline-start: 1rem;
+      margin-inline-start: 0;
+    }
+  }
 }

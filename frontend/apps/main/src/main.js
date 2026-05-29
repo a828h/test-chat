@@ -7,6 +7,7 @@ import mitt from 'mitt'
 import api from './api'
 import '@shared-ui/assets/styles/main.scss'
 import '@shared-ui/utils/string.js'
+import { applyDocumentLocale } from '@shared-ui/utils/locale'
 import Root from './Root.vue'
 
 const setFavicon = (url) => {
@@ -20,6 +21,7 @@ async function initApp () {
   const config = (await api.getConfig()).data.data
   const emitter = mitt()
   const lang = config['app.lang'] || 'en-US'
+  applyDocumentLocale(lang)
   const langMessages = await api.getLanguage(lang)
 
   // Set favicon.

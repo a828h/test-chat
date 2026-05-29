@@ -6,7 +6,7 @@
         :key="action.type"
         class="flex items-center border bg-background rounded transition-colors duration-150 hover:bg-accent/50 group gap-2"
       >
-        <div class="flex items-center space-x-2 px-2">
+        <div class="flex items-center gap-2 px-2">
           <component
             :is="getIcon(action.type)"
             size="16"
@@ -27,7 +27,7 @@
         <button
           @click.prevent="onRemove(action)"
           class="p-2 text-muted-foreground hover:text-destructive focus:outline-none rounded transition-colors duration-150"
-          title="Remove action"
+          :title="t('globals.terms.remove')"
         >
           <X size="14" />
         </button>
@@ -40,6 +40,7 @@
 import { X, Users, User, MessageSquare, Tags, Flag } from 'lucide-vue-next'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@shared-ui/components/ui/tooltip'
 import { useI18n } from 'vue-i18n'
+import { formatMacroActionValues } from '@/utils/macroActionDisplay.js'
 
 defineProps({
   actions: {
@@ -64,12 +65,7 @@ const getIcon = (type) =>
     remove_tags: Tags
   })[type]
 
-const getDisplayValue = (action) => {
-  if (action.display_value?.length) {
-    return action.display_value.join(', ')
-  }
-  return action.value.join(', ')
-}
+const getDisplayValue = (action) => formatMacroActionValues(action, t)
 
 const getTooltip = (action) => {
   const prefixes = {

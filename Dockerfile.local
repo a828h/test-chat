@@ -1,0 +1,60 @@
+# Local development image: builds frontend + backend from source (includes RTL changes).
+# The release Dockerfile only copies a pre-built binary from GoReleaser.
+
+FROM node:20-alpine AS frontend
+WORKDIR /src/frontend
+
+RUN corepack enable && corepack prepare pnpm@9.15.3 --activate
+
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+COPY frontend/ ./
+
+ARG VITE_APP_VERSION=local
+ENV VITE_APP_VERSION=${VITE_APP_VERSION}
+RUN pnpm build:main && pnpm build:widget
+
+FROM golang:1.25-alpine AS backend
+WORKDIR /src
+
+RUN apk add --no-cache git
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+RUN go install github.com/knadh/stuffbin/...@latest
+
+COPY cmd/ ./cmd/
+COPY internal/ ./internal/
+COPY i18n/ ./i18n/
+COPY schema.sql ./
+COPY static/ ./static/
+
+COPY --from=frontend /src/frontend/dist ./frontend/dist
+
+ARG LIBREDESK_VERSION=local
+ARG LIBREDESK_COMMIT=dev
+RUN BUILDSTR="${LIBREDESK_VERSION} (#${LIBREDESK_COMMIT} $(date -u +%Y-%m-%dT%H:%M:%SZ), linux/amd64)" && \
+    CGO_ENABLED=0 go build -a \
+      -ldflags="-s -w \
+        -X 'main.buildString=${BUILDSTR}' \
+        -X 'main.versionString=${LIBREDESK_VERSION}' \
+        -X 'github.com/abhinavxd/libredesk/internal/version.Version=${LIBREDESK_VERSION}'" \
+      -o libredesk ./cmd/
+
+RUN stuffbin -a stuff -in libredesk -out libredesk \
+      frontend/dist i18n schema.sql static
+
+FROM alpine:3.18
+
+RUN apk --no-cache add ca-certificates tzdata
+
+WORKDIR /libredesk
+
+COPY --from=backend /src/libredesk ./libredesk
+COPY config.sample.toml config.toml
+
+EXPOSE 9000
+
+CMD ["./libredesk"]

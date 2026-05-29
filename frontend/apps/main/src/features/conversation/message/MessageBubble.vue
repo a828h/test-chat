@@ -52,6 +52,7 @@
       >
         <div
           class="flex flex-col justify-end message-bubble"
+          dir="auto"
           :class="bubbleClasses"
         >
           <!-- Message Envelope -->

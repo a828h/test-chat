@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { TagsInputRoot, useForwardPropsEmits } from 'radix-vue'
 import { cn } from '../../../lib/utils'
+import { useDocumentDirection } from '../../../composables/useDocumentDirection'
 
 const props = defineProps({
   modelValue: { type: Array, required: false },
@@ -25,10 +26,15 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:modelValue', 'invalid'])
 
+const documentDirection = useDocumentDirection()
+
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props
 
-  return delegated
+  return {
+    ...delegated,
+    dir: delegated.dir ?? documentDirection.value
+  }
 })
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
@@ -37,6 +43,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <TagsInputRoot
     v-bind="forwarded"
+    :dir="delegatedProps.dir"
     :class="
       cn(
         'flex flex-wrap gap-2 items-center rounded-md border border-input bg-background px-3 py-1.5 text-sm',

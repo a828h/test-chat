@@ -23,10 +23,8 @@
         v-for="message in chatStore.getCurrentConversationMessages"
         :key="message.uuid"
         :class="[
-          'flex flex-col animate-slide-in',
-          message.author.type === 'contact' || message.author.type === 'visitor'
-            ? 'items-end'
-            : 'items-start'
+          'flex flex-col animate-slide-in w-fit max-w-[85%]',
+          messageSideClass(message)
         ]"
       >
         <!-- CSAT Message Bubble -->
@@ -39,9 +37,10 @@
         <!-- Regular Message Bubble -->
         <div
           v-else
+          dir="auto"
           :class="[
-            'max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-5 break-words transition-all duration-200',
-            message.author.type === 'contact' || message.author.type === 'visitor'
+            'w-full px-4 py-3 rounded-2xl text-sm leading-5 break-words transition-all duration-200',
+            isVisitorMessage(message)
               ? [
                   'text-primary-foreground rounded-br-sm',
                   message.status === 'sending' || message.status === 'uploading'
@@ -75,7 +74,7 @@
             :aria-expanded="isQuotedTextVisible(message.uuid)"
             :class="[
               'text-xs cursor-pointer px-2 py-1 w-max rounded transition-all',
-              message.author.type === 'contact' || message.author.type === 'visitor'
+              isVisitorMessage(message)
                 ? 'text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground'
                 : 'text-muted-foreground hover:bg-muted hover:text-primary'
             ]"
@@ -126,9 +125,10 @@
       </div>
 
       <!-- Typing Indicator -->
-      <div v-if="isTyping" class="flex flex-col items-start">
+      <div v-if="isTyping" class="flex flex-col w-fit max-w-[85%] me-auto rtl:me-0 rtl:ms-auto">
         <div
-          class="max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-5 bg-muted text-foreground rounded-bl-sm"
+          class="w-full px-4 py-3 rounded-2xl text-sm leading-5 bg-muted text-foreground rounded-bl-sm"
+          dir="auto"
         >
           <TypingIndicator />
         </div>
@@ -163,6 +163,15 @@ import { Spinner } from '@shared-ui/components/ui/spinner'
 import { containsQuoteMarkers } from '@shared-ui/utils/quotedContent.js'
 
 const extendedCssProperties = [...allowedCssProperties, 'transform', 'transform-origin']
+
+/** Visitor bubbles on the right; agent on the left (same in RTL). */
+const isVisitorMessage = (message) =>
+  message.author.type === 'contact' || message.author.type === 'visitor'
+
+const messageSideClass = (message) =>
+  isVisitorMessage(message)
+    ? 'ms-auto rtl:ms-0 rtl:me-auto'
+    : 'me-auto rtl:me-0 rtl:ms-auto'
 
 const props = defineProps({
   showPreChatForm: {

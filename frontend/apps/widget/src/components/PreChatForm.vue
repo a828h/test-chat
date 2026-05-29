@@ -124,7 +124,7 @@
               v-slot="{ componentField, handleChange }"
               :name="field.key"
             >
-              <FormItem class="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem class="flex flex-row items-start gap-3 space-y-0">
                 <FormControl>
                   <Checkbox :checked="componentField.modelValue" @update:checked="handleChange" />
                 </FormControl>
@@ -190,7 +190,7 @@
         <Button @click="submitForm" class="w-full" :disabled="!requiredFieldsFilled || !meta.valid || !messageText.trim() || props.isSubmitting">
           <div
             v-if="props.isSubmitting"
-            class="w-4 h-4 border-2 border-background border-t-current rounded-full animate-spin mr-2"
+            class="w-4 h-4 border-2 border-background border-t-current rounded-full animate-spin me-2"
           ></div>
           {{ $t('widget.prechatForm.startChat') }}
         </Button>
